@@ -123,21 +123,11 @@ const Product = (props) => {
             </Typography>
            </Grid>
           </CardContent>
-        {/* <CardActions>
-          <Button size="small" variant="contained" color="secondary" onClick={()=> props.CartShop({name:"iPhone"})}>
-           add to cart +
-          </Button>
-          <Button size="small" color="primary" onClick={()=> props.RemoveTocart()}>
-          remove to cart
-          </Button>
-        </CardActions> */}
       </Card>
      </Link>
      </Grid>
     );
-    
   });
-
 
   return (
     <div className={classes.root}>
@@ -149,7 +139,5 @@ const Product = (props) => {
     </div>
   );
 }
-
-
 
 export default connect(null)(Product);

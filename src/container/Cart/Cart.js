@@ -1,6 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
+import Container from '@material-ui/core/Container';
+import currencyFormatter from "currency-formatter";
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,113 +15,85 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Tooltip from '@material-ui/core/Tooltip';
-import shop1 from "../../image/phone.jpg";
-import shop2 from "../../image/handfree.jpg";
-import shop3 from "../../image/watch.jpg";
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import * as actionCreators from '../../store/actions/A-home';
 
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+const useStyles = makeStyles((theme) => ({
+  table: {
+    minWidth: 650,
   },
-  body: {
-    fontSize: 14,
+  Image: {
+    width: "58px",
+    height: "42px",
   },
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+  paperBox: {
+    display: "flex",
+    justifyContent: "center",
+    '& > *': {
+      width: theme.spacing(4),
+      height: theme.spacing(4),
     },
   },
-}))(TableRow);
-
-// const rows =[
-//   {_id: 1, 
-//     IMG: shop1,
-//     Title: "iphone", 
-//     Description: "men watch good with over6,000 species, ranging across all continents except Antarctica",
-//     Price: 12,
-//     Discount: 2,
-//     DiscountPrice: 12 - 2 / 100 * 12
-//    },
-//     {_id: 2,
-//     IMG: shop2,
-//     Title: "Handfree",
-//     Description: "men watch good with over6,000 species, ranging across all continents except Antarctica",
-//     Price: 10,
-//     Discount: 2,
-//     DiscountPrice: 10 - 2 / 100 * 10
-//    },
-//     {_id: 3,
-//     IMG: shop3,
-//     Title: "Luxury Watch",
-//     Description: "men watch good with over6,000 species, ranging across all continents except Antarctica", 
-//     Price: 15,
-//     Discount: 5,
-//     DiscountPrice: 15 - 5 / 100 * 15
-//    },
-//     {_id: 4,
-//      IMG: shop3,
-//      Title: "Luxury Watch", 
-//      Description: "men watch good with over6,000 species, ranging across all continents except Antarctica",
-//      Price: 15,
-//      Discount: 5,
-//      DiscountPrice: 15 - 5 / 100 * 15
-//    },
-// ]
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 700,
-  },
-});
+counters: {
+  display:"flex",
+  alignItems:"center",
+  justifyContent:"center"
+},
+}));
 
 const Cart = (props) => {
   const classes = useStyles();
-console.log(props.Shop," console statee");
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Picture</StyledTableCell>
-            <StyledTableCell align="left">Name</StyledTableCell>
-            <StyledTableCell align="center">Price</StyledTableCell>
-            <StyledTableCell align="center">Inc/Dec</StyledTableCell>
-            <StyledTableCell align="center">TotalPrice</StyledTableCell>
-            <StyledTableCell align="center">Remove</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.Shop.map((row) => (
-            <StyledTableRow key={row._id}>
-              <StyledTableCell component="th" scope="row">
-               <img src={row.IMG} width="60px" height="55px"></img>
-              </StyledTableCell>
-              <StyledTableCell align="left">{row.Title}</StyledTableCell>
-              <StyledTableCell align="center">{row.Price}</StyledTableCell>
-              <StyledTableCell align="center">haha</StyledTableCell>
-              <StyledTableCell align="center">hoh</StyledTableCell>
-              <StyledTableCell align="center">
-               <Tooltip title="Delete">
-                <IconButton aria-label="delete">
-                <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-             </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+  
+  return (<div>
+    <Container>
+      {props.Shop.length > 0 ? <>
+        <h2>Your Cart</h2>
+        <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+               <TableCell align="center">Picture</TableCell>
+               <TableCell align="center">Name</TableCell>
+               <TableCell align="center">Price</TableCell>
+               <TableCell align="center">Inc/Dec</TableCell>
+               <TableCell align="center">TotalPrice</TableCell>
+               <TableCell align="center">Remove</TableCell> 
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.Shop.map((row) => (
+              <TableRow key={row._id}>
+                <TableCell align="center" component="th" scope="row">
+                <img src={row.IMG} className={classes.Image} />
+                </TableCell>
+                 <TableCell align="center">{row.Title}</TableCell>
+                 <TableCell align="center">{currencyFormatter.format(row.DiscountPrice, { code: 'USD' })}</TableCell>
+                 <TableCell>
+                 <Box className={classes.paperBox}>
+                    <Paper className={classes.counters} variant="outlined" onClick={props.DEC} ><RemoveIcon fontSize="small"/></Paper>
+                    <Paper className={classes.counters} variant="outlined">{row.Quantity}</Paper>
+                    <Paper className={classes.counters} variant="outlined" onClick={props.INC} ><AddIcon fontSize="small"/></Paper>
+                  </Box>
+                  </TableCell>
+                  <TableCell align="center">{currencyFormatter.format(row.DiscountPrice * row.Quantity, { code: 'USD' })}</TableCell>
+                   <TableCell align="center">
+                   <Tooltip title="Delete">
+                   <IconButton color="secondary" aria-label="delete">
+                   <DeleteOutlineIcon size="small" />
+                  </IconButton>
+                </Tooltip>
+               </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </> : <h2>your cart is empty!</h2> }
+  </Container>
+  </div>
   );
 }
-
 
 const mapStateToProps = state => {
     return {
@@ -122,4 +101,11 @@ const mapStateToProps = state => {
     };
   };
 
-  export default connect(mapStateToProps)(Cart);
+  const mapDispatchToProps = dispatch => {
+    return {
+         INC: (payload) => dispatch(actionCreators.Increment(payload)),
+         DEC: (payload) => dispatch(actionCreators.Decrement(payload)),
+      };
+    };
+
+  export default connect(mapStateToProps, mapDispatchToProps)(Cart);

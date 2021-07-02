@@ -49,7 +49,7 @@ actualPrice: {
 },
 }));
 
-const ComplexGrid = (props) => {
+const Details = (props) => {
   const classes = useStyles();
  
   const [Product,SetProduct] = React.useState(null)
@@ -114,41 +114,35 @@ const ComplexGrid = (props) => {
     }
   }
 
+ 
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        {Product? Product.map((_products) => {
+          return(<div>
         <Grid container spacing={2}>
          <Grid item xs={12} sm={4}>
-      {Product? Product.map((pic) =>{
-           return( <div key={pic._id}><img className={classes.image} src={pic.IMG} /></div> )  
-      } ) :null}
-          </Grid>
+         <div key={_products._id}><img className={classes.image} src={_products.IMG} /></div> 
+         </Grid>
           <Grid item xs={12} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-              {
-    Product?Product.map((tex)=>{
-      return(
-       <>
        <Typography gutterBottom variant="h5" component="h2">
-         {tex.Title} 
+         {_products.Title} 
     </Typography>
       <Grid container justify="space-between">  
             <Typography inline variant="subtitle1" align="left">
-            <span className={classes.actualPrice}>{currencyFormatter.format(tex.Price, { code: 'USD' })}</span> 
-            <span className={classes.discountPrice}> {tex.Discount}%</span>
+            <span className={classes.actualPrice}>{currencyFormatter.format(_products.Price, { code: 'USD' })}</span> 
+            <span className={classes.discountPrice}> {_products.Discount}%</span>
             </Typography>
             <Typography inline variant="subtitle1" align="right">
-            {currencyFormatter.format(tex.DiscountPrice, { code: 'USD' })}
+            {currencyFormatter.format(_products.DiscountPrice, { code: 'USD' })}
             </Typography>
            </Grid>
      <Typography variant="body1" gutterBottom color="textSecondary">
-         {tex.Description}
+         {_products.Description}
     </Typography>
-  </>
-      )
-    }):null
-  }
    <div className={classes.paperBox}>
       <Paper className={classes.counters} variant="outlined" onClick={decQuantity}><RemoveIcon fontSize="small"/></Paper>
       <Paper className={classes.counters} variant="outlined">{Quantity}</Paper>
@@ -157,33 +151,26 @@ const ComplexGrid = (props) => {
               </Grid>
             </Grid>
             </Grid>
-            <Grid item>
+           <Grid item>
             <Button size="small" variant="contained" 
-            onClick={()=> props.ADD(Product[0])} color="secondary">
-           add to cart +
-          </Button>
-            </Grid>
-          
-        </Grid>
+              onClick={()=> props.ADDTOCART({...Product[0], Quantity:Quantity})} color="secondary">
+              add to cart +
+            </Button>
+           </Grid>
+          </Grid>
+        </div> )
+        }) : null}
       </Paper>
+      
 
     </div>
   );
 }
 
-// const mapStateToProps = state => {
-//   return {
-//     Shop: state
-//   };
-// };
-
 const mapDispatchToProps = dispatch => {
 return {
-  ADD : (payload) => dispatch(actionCreators.add(payload)),
-
-  ADDTOCART: (payload) => dispatch(actionCreators.AddToCart(payload)),
-  RemoveTocart: () => dispatch(actionCreators.removeToCart())
-};
+     ADDTOCART: (payload) => dispatch(actionCreators.AddToCart(payload)),
+  };
 };
 
-export default connect(null, mapDispatchToProps)(ComplexGrid);
+export default connect(null, mapDispatchToProps)(Details);

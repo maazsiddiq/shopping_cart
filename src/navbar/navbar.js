@@ -15,6 +15,9 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import Badge from '@material-ui/core/Badge';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import HomeIcon from '@material-ui/icons/Home';
+import DialpadOutlinedIcon from '@material-ui/icons/DialpadOutlined';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
@@ -26,27 +29,12 @@ const useStyles = makeStyles((theme) => ({
   position:"sticky",
   top:"0",
   zIndex:"100"
-
   },
-  // appBar: {
-  //   transition: theme.transitions.create(['margin', 'width'], {
-  //     easing: theme.transitions.easing.sharp,
-  //     duration: theme.transitions.duration.leavingScreen,
-  //   }),
-  // },
-  // appBarShift: {
-  //   width: `calc(100% - ${drawerWidth}px)`,
-  //   marginLeft: drawerWidth,
-  //   transition: theme.transitions.create(['margin', 'width'], {
-  //     easing: theme.transitions.easing.easeOut,
-  //     duration: theme.transitions.duration.enteringScreen,
-  //   }),
-  // },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   hide: {
-    // display: 'none',
+    display: 'none',
   },
   drawer: {
     width: drawerWidth,
@@ -63,22 +51,6 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
   title: {
     flexGrow: 1,
   },
@@ -87,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     textDecoration: "none", 
+  },
+  listitemtext: {
+    color: "#ff4400",
   },
 }));
 
@@ -106,12 +81,7 @@ const useStyles = makeStyles((theme) => ({
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar
-        position="static"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
+      <AppBar position="static">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -136,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="persistent"
+        role="presentation"
         anchor="left"
         open={open}
         classes={{
@@ -144,22 +114,30 @@ const useStyles = makeStyles((theme) => ({
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} className={classes.listitemtext}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
         <Divider />
         <List>
-          {[['/','HOME'],['/Products','PRODUCTS']].map((text, index) => (
-           <ListItem>
-           <Link to={text[0]} Button key={text} className={classes.link}>
-              
+          {[['/','Home'],['/Products','Products']].map((text, index) => (
+         <Link to={text[0]} className={classes.link}>
+          <ListItem button key={text} className={classes.listitemtext}>
               <ListItemText onClick={handleDrawerClose} primary={text[1]} />
-            </Link>
          </ListItem>
+         </Link>
           ))}
         </List>
-     
+        <Divider />
+        <List>
+          {[['SignUp','SignUp'],['/Login','Login']].map((text, index) => (
+         <Link to={text[0]} className={classes.link}>
+          <ListItem button key={text} className={classes.listitemtext}>
+              <ListItemText onClick={handleDrawerClose} primary={text[1]} />
+         </ListItem>
+         </Link>
+          ))}
+        </List>
       </Drawer>
 
     </div>
@@ -168,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
 
 const mapStateToProps = state => {
   return {
-    Shop: state
+    Shop: state.products
   };
 };
 

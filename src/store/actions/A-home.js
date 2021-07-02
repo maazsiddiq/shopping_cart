@@ -8,17 +8,16 @@ export const AddToCart = (pay) => {
     };
 };
 
-export const removeToCart = () => {
-    // console.log("Hi!! action",pay)
+export const Increment = (id) => {
     return {
-        type: ActionType.REMOVETOCART,
+        type: ActionType.INCREMENT,
+        payload: id
     };
 };
 
-export const add = (pay) => {
+export const Decrement = (id) => {
     return {
-        type: ActionType.ADD,
-        payload: pay
-    }
-   
-}
+        type: ActionType.DECREMENT,
+        payload: id
+    };
+};
