@@ -1,40 +1,42 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import Badge from '@material-ui/core/Badge';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import HomeIcon from '@material-ui/icons/Home';
-import DialpadOutlinedIcon from '@material-ui/icons/DialpadOutlined';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { Link } from "react-router-dom";
-import {connect} from 'react-redux';
+import React from "react";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Badge from "@material-ui/core/Badge";
+import HomeIcon from "@material-ui/icons/Home";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { connect } from "react-redux";
+import { Button } from "@material-ui/core";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-  position:"sticky",
-  top:"0",
-  zIndex:"100"
+    position: "sticky",
+    top: "0",
+    zIndex: "100",
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   hide: {
-    display: 'none',
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
@@ -44,12 +46,12 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   title: {
     flexGrow: 1,
@@ -57,17 +59,21 @@ const useStyles = makeStyles((theme) => ({
   iconButton: {
     color: "#ffffff",
   },
-  link: {
-    textDecoration: "none", 
+  Active: {
+    background: "#f4f4f4",
   },
-  listitemtext: {
-    color: "#ff4400",
+  link: {
+    textDecoration: "none",
   },
 }));
 
- const PersistentDrawerLeft = (props) => {
+const PersistentDrawerLeft = (props) => {
   const classes = useStyles();
   const theme = useTheme();
+
+  const history = useHistory();
+  const location = useLocation();
+
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -78,6 +84,29 @@ const useStyles = makeStyles((theme) => ({
     setOpen(false);
   };
 
+  // menuItems..
+  const menuItems = [
+    {
+      text: "Home",
+      icon: <HomeIcon color="primary" />,
+      path: "/",
+    },
+    {
+      text: "Products",
+      icon: <ShoppingCartIcon color="primary" />,
+      path: "/Products",
+    },
+    // {
+    //   text: "SignIn",
+    //   icon: <LockSharpIcon color="primary" />,
+    //   path: "/SignIn",
+    // },
+    // {
+    //   text: "SignUp",
+    //   icon: <LockSharpIcon color="primary" />,
+    //   path: "/SignUp",
+    // },
+  ];
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -95,13 +124,18 @@ const useStyles = makeStyles((theme) => ({
           <Typography variant="h6" className={classes.title} noWrap>
             Shopping Cart
           </Typography>
-        <Link to="/Cart" className={classes.link}>
-          <IconButton aria-label="cart" className={classes.iconButton}>
-          <Badge badgeContent={props.Shop.length} color="secondary">
-            <ShoppingCartIcon /> 
-          </Badge>
-        </IconButton>
-       </Link> 
+          <Link to="/SignIn" className={classes.link}>
+            <Button variant="outlined" size="small">
+              signin
+            </Button>
+          </Link>
+          <Link to="/Cart" className={classes.link}>
+            <IconButton aria-label="cart" className={classes.iconButton}>
+              <Badge badgeContent={props.Shop.length} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -114,39 +148,40 @@ const useStyles = makeStyles((theme) => ({
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose} className={classes.listitemtext}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          <IconButton onClick={handleDrawerClose} color="primary">
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
         <List>
-          {[['/','Home'],['/Products','Products']].map((text, index) => (
-         <Link to={text[0]} className={classes.link}>
-          <ListItem button key={text} className={classes.listitemtext}>
-              <ListItemText onClick={handleDrawerClose} primary={text[1]} />
-         </ListItem>
-         </Link>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {[['SignUp','SignUp'],['/Login','Login']].map((text, index) => (
-         <Link to={text[0]} className={classes.link}>
-          <ListItem button key={text} className={classes.listitemtext}>
-              <ListItemText onClick={handleDrawerClose} primary={text[1]} />
-         </ListItem>
-         </Link>
+          {menuItems.map((items) => (
+            <ListItem
+              button
+              key={items}
+              onClick={() => history.push(items.path)}
+              className={
+                location.pathname == items.path ? classes.Active : null
+              }
+            >
+              <ListItemIcon onClick={handleDrawerClose}>
+                {items.icon}
+              </ListItemIcon>
+              <ListItemText onClick={handleDrawerClose} primary={items.text} />
+            </ListItem>
           ))}
         </List>
       </Drawer>
-
     </div>
   );
-}
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    Shop: state.products
+    Shop: state.products,
   };
 };
 
