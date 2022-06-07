@@ -18,7 +18,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Badge from "@material-ui/core/Badge";
 import HomeIcon from "@material-ui/icons/Home";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import PersonIcon from '@material-ui/icons/Person';
 
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
@@ -93,7 +95,7 @@ const PersistentDrawerLeft = (props) => {
     },
     {
       text: "Products",
-      icon: <ShoppingCartIcon color="primary" />,
+      icon: <AssignmentIcon color="primary" />,
       path: "/Products",
     },
     // {
@@ -125,9 +127,9 @@ const PersistentDrawerLeft = (props) => {
             Shopping Cart
           </Typography>
           <Link to="/SignIn" className={classes.link}>
-            <Button variant="outlined" size="small">
-              signin
-            </Button>
+           <IconButton aria-label="user" className={classes.iconButton}>
+            <PersonIcon />
+           </IconButton>
           </Link>
           <Link to="/Cart" className={classes.link}>
             <IconButton aria-label="cart" className={classes.iconButton}>

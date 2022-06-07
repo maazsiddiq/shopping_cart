@@ -7,16 +7,12 @@ const initialstate = {
 };
 
 const Reducer = (state = initialstate, action) => {
-  console.log(state);
-  console.log("hi reducer !!!", action);
   switch (action.type) {
     case ActionType.ADD_TO_CART:
       const CHECK = state.products.find((pr) => {
         return pr._id === action.payload._id;
       });
-      console.log(CHECK, "check=======");
       if (CHECK) {
-        console.log("Products ==>>", state.products);
         let products = [];
         state.products.forEach((product) => {
           if (product._id == action.payload._id) {
